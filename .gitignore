@@ -1,4 +1,22 @@
+# --- Entorno Virtual ---
+Tenv/
+
+# --- Otros entornos virtuales comunes (por seguridad) ---
+venv/
+env/
+.env/
+.venv/
+
+# --- Datos (Datasets) ---
 *.csv
+
+# --- Python Cache y Compilados ---
 __pycache__/
 *.pyc
+
+# --- Notebooks ---
 .ipynb_checkpoints/
+
+# --- Sistema Operativo (Mac/Windows) ---
+.DS_Store
+Thumbs.db
