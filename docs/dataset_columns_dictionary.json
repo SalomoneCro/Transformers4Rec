@@ -1,0 +1,297 @@
+{
+  "metadata_identification": {
+    "SIT_SITE_ID": "Identificador del sitio de MercadoLibre (MLA=Argentina, MLB=Brasil, MLM=México, MLC=Chile, MLU=Uruguay, MCO=Colombia, etc.)",
+    "CUS_CUST_ID_SEL": "ID único del vendedor (customer ID del seller)",
+    "DAY_INTERVAL": "Fecha del evento/recomendación en formato YYYY-MM-DD",
+    "MELIDATA_SESSION_ID": "ID de sesión de MeliData para tracking del evento",
+    "SELLER_TIMESTAMP": "Timestamp exacto cuando el seller interactuó con la recomendación",
+    "ITE_ITEM_ID": "ID del ítem/producto específico relacionado con la acción (si aplica)",
+    "DOM_DOMAIN_ID": "ID del dominio del producto en el catálogo de MELI (ej: MLA-CELLPHONES)"
+  },
+  
+  "card_interaction": {
+    "CUMULATIVE_CLICKS_PER_CARD": "Número acumulado de clicks que esta card ha recibido del seller",
+    "CUMULATIVE_VIEWS_PER_CARD": "Número acumulado de veces que el seller ha visto esta card",
+    "CARD_KEY_CLICK": "Identificador de la card/recomendación que el seller clickeó (acción tomada). Ejemplo: PREMIUM_LISTING_TYPE, IMPROVE_PHOTOS, etc."
+  },
+  
+  "attribution_window": {
+    "ATT_WINDOW_END_DATE": "Fecha de fin de la ventana de atribución (típicamente 7 o 15 días después de la acción)",
+    "ATT_COMPLIES": "Flag booleano (0/1) que indica si la acción tiene atribución válida (1=sí, puede usarse para entrenamiento)",
+    "STANDARIZED_UPLIFT": "Uplift estandarizado del GMV después de la acción (normalizado por distribución)",
+    "AVG_ITEM_DOMAIN_GMV_USD": "GMV promedio del item/dominio específico en USD",
+    "AVG_UPLIFT_DOM_TOTAL_GMV_USD": "Uplift promedio del GMV total del dominio en USD"
+  },
+  
+  "attribution_metrics_orders": {
+    "COACHED_ITEM_ORDERS_0_15D": "Cantidad de órdenes del item específico en ventana post-acción (día 0 a día 15)",
+    "COACHED_ITEM_ORDERS_TdA_15D": "Cantidad de órdenes del item en período de control 'Tiempo de Antes' (15 días previos a la acción)",
+    "COACHED_ITEM_ORDERS_0_7D": "Cantidad de órdenes del item en ventana corta post-acción (día 0 a día 7)",
+    "COACHED_ITEM_ORDERS_TdA_7D": "Cantidad de órdenes del item en período de control corto (7 días previos a la acción)"
+  },
+  
+  "attribution_metrics_visits": {
+    "COACHED_ITEM_VISITS_0_15D": "Visitas al item específico en ventana post-acción (0-15 días)",
+    "COACHED_ITEM_VISITS_TdA_15D": "Visitas al item en período de control (15 días previos)",
+    "COACHED_ITEM_VISITS_0_7D": "Visitas al item en ventana corta post-acción (0-7 días)",
+    "COACHED_ITEM_VISITS_TdA_7D": "Visitas al item en período de control corto (7 días previos)"
+  },
+  
+  "seller_domains": {
+    "TOP_1_DOMAIN_ID": "Dominio #1 con mayor GMV del seller (ej: MLA-CELLPHONES, MLA-TSHIRTS)",
+    "TOP_2_DOMAIN_ID": "Dominio #2 con mayor GMV del seller"
+  },
+  
+  "seller_segment": {
+    "CLUSTER_SELLER": "Clúster del seller según comportamiento: Seasonal (estacional), Emerging (emergente), Core (núcleo), Stall (estancado), Starter/Newbie (principiante)",
+    "SELLER_SEGMENT": "Segmento macro del seller (ej: SELLER DEV, SELLER ENTERPRISE)",
+    "SELLER_SEGMENT_DETAIL": "Segmento detallado: SD ASESORADO (con asesoramiento), SD NO ASESORADO (sin asesoramiento)",
+    "IS_MERCADO_LIDER_FLAG": "Flag booleano (0/1) indicando si el seller tiene badge de Mercado Líder",
+    "IS_COMPANY_FLAG": "Flag booleano (0/1) indicando si el seller es una empresa (vs. persona física)"
+  },
+  
+  "seller_tenure": {
+    "DAYS_FIRST_SALE": "Días desde la primera venta del seller en la plataforma",
+    "DAYS_FIRST_PUBLICATION": "Días desde la primera publicación del seller",
+    "CUS_FIRST_PUBLICATION_DATE": "Fecha exacta de la primera publicación del seller (YYYY-MM-DD)",
+    "CUS_FIRST_PUBLICATION": "Fecha de primera publicación (formato alternativo)",
+    "CUS_FIRST_SELL": "Fecha de primera venta del seller"
+  },
+  
+  "reputation_status": {
+    "HAS_REP_CALCULATED_FLAG": "Flag booleano (0/1) indicando si el seller tiene reputación calculada",
+    "REP_REAL_LEVEL": "Nivel de reputación real (newbie, light_green, yellow, orange, red, unknown, green, green_gold)",
+    "REP_CURRENT_LEVEL": "Nivel de reputación actual visible al público",
+    "SELLER_REPUTATION": "Reputación del seller (green=buena, yellow=media, red=mala, etc.)"
+  },
+  
+  "reputation_metrics": {
+    "REP_CLAIMS_RATE": "Tasa de reclamos (claims) sobre transacciones totales",
+    "REP_DISPUTES_RATE": "Tasa de disputas abiertas contra el seller",
+    "REP_DELAYED_HT_RATE": "Tasa de envíos retrasados (delayed handling time)",
+    "REP_SELLER_CANCELLATIONS_RATE": "Tasa de cancelaciones iniciadas por el seller",
+    "REP_CLAIMS_RATE_L15D": "Tasa de claims en los últimos 15 días (L = Last)",
+    "REP_CLAIMS_RATE_A15D": "Tasa de claims antes de los últimos 15 días (A = Anterior)",
+    "REP_DISPUTES_RATE_L15D": "Tasa de disputas en los últimos 15 días",
+    "REP_DISPUTES_RATE_A15D": "Tasa de disputas antes de los últimos 15 días",
+    "REP_SELLER_CANCELLATIONS_RATE_L15D": "Tasa de cancelaciones del seller en últimos 15 días",
+    "REP_SELLER_CANCELLATIONS_RATE_A15D": "Tasa de cancelaciones del seller antes de últimos 15 días"
+  },
+  
+  "reputation_transactions": {
+    "REP_SHORT_PERIOD_FULFILLED_TX": "Transacciones cumplidas en período corto (últimos meses)",
+    "REP_SHORT_PERIOD_NOT_FULFILLED_TX": "Transacciones NO cumplidas en período corto",
+    "REP_SHORT_PERIOD_TX": "Total de transacciones en período corto",
+    "REP_SHORT_PERIOD_TX_SHP_ME2": "Transacciones con Mercado Envíos 2 en período corto",
+    "REP_LONG_PERIOD_FULFILLED_TX": "Transacciones cumplidas en período largo (histórico)",
+    "REP_LONG_PERIOD_NOT_FULFILLED_TX": "Transacciones NO cumplidas en período largo",
+    "REP_LONG_PERIOD_TX": "Total de transacciones en período largo",
+    "REP_LONG_PERIOD_TX_SHP_ME2": "Transacciones con ME2 en período largo"
+  },
+  
+  "order_metrics": {
+    "DAYS_SINCE_LAST_ORDER": "Días desde la última orden recibida por el seller",
+    "DAILY_ORDERS_QTY": "Cantidad de órdenes diarias (promedio)",
+    "ORDERS": "Total de órdenes históricas del seller",
+    "ORDERS_SHIPPED": "Total de órdenes enviadas (fulfilled)",
+    "ORDERS_60D": "Órdenes en los últimos 60 días",
+    "TRANSACTION_VOLUME_30D": "Volumen de transacciones en últimos 30 días"
+  },
+  
+  "claims_and_issues": {
+    "CLAIMS_60D": "Cantidad de reclamos (claims) en últimos 60 días",
+    "PDD_CLAIMS_60D": "Claims relacionados con PDD (Post Delivery Date) en últimos 60 días",
+    "PRODUCT_AUTHENTICY_COMPLAINT_60D": "Quejas por autenticidad del producto en últimos 60 días",
+    "SELLER_CANCELATION_60D": "Cancelaciones del seller en últimos 60 días",
+    "CLAIM_RATE_60D": "Tasa de claims sobre órdenes totales (últimos 60 días)",
+    "ORDER_DEFECT_RATE_60D": "Tasa de defectos en órdenes (claims + cancelaciones + late shipments) últimos 60 días",
+    "ORDER_DEFECT_RATE_60D_L15D": "ODR en últimos 15 días",
+    "ORDER_DEFECT_RATE_60D_A15D": "ODR antes de últimos 15 días",
+    "PRODUCT_AUTHENTICITY_CUSTOMER_COMPLAINT_RATE_60D": "Tasa de quejas de autenticidad sobre órdenes totales (60d)"
+  },
+  
+  "listings": {
+    "LL": "Live Listings - Publicaciones activas del seller",
+    "LLB": "Live Listings con BuyBox - Publicaciones activas que ganan BuyBox",
+    "DAILY_BUYBOX_ELEGIBLE_QTY": "Cantidad diaria de items elegibles para BuyBox",
+    "LL_NEW": "Publicaciones nuevas (recientes)",
+    "VIS_LL": "Visitas a publicaciones activas",
+    "INCOMPLETE_TECH_SPECS": "Cantidad de publicaciones con especificaciones técnicas incompletas",
+    "RATIO_INCOMPLETE_TECH_SPECS": "Ratio de publicaciones con specs incompletas sobre total"
+  },
+  
+  "flex_and_shipping": {
+    "HAS_ACTIVE_FLEX": "Flag booleano (0/1) indicando si el seller tiene Mercado Envíos Flex activo",
+    "N_ZONES_FLEX_ACTIVE": "Número de zonas geográficas con Flex activo",
+    "RATIO_FLEX_ITEMS": "Proporción de items con Flex habilitado sobre total de items",
+    "NOT_ACTIVE_FLEX_IN_WHITELIST": "Número de items en whitelist de Flex pero sin Flex activo",
+    "RATIO_ITEMS_ME_AVAILABLE": "Proporción de items con Mercado Envíos disponible",
+    "RATIO_FREE_SHIPPING": "Proporción de items con envío gratis",
+    "RATIO_FREE_SHIPPING_M2": "Proporción de items con envío gratis vía ME2",
+    "SHIP_ME2_DELAYS_7D": "Cantidad de delays de ME2 en últimos 7 días",
+    "ITEMS_ME": "Cantidad de items con Mercado Envíos configurado",
+    "ITEMS_ME2": "Cantidad de items con Mercado Envíos 2 (fullfilment)",
+    "LATE_SHIPMENT_RATE_7D": "Tasa de envíos retrasados en últimos 7 días",
+    "LATE_SHIPMENT_RATE_7D_L15D": "Tasa de late shipments en últimos 15 días",
+    "LATE_SHIPMENT_RATE_7D_A15D": "Tasa de late shipments antes de últimos 15 días"
+  },
+  
+  "quality_and_category": {
+    "N_QUESTIONS_LL": "Número de preguntas recibidas en publicaciones activas",
+    "BAD_CATEGORY": "Número de publicaciones en categoría incorrecta",
+    "BAD_CATEGORY_CBT": "Número de publicaciones con categoría incorrecta según CBT (Catalog-Based Taxonomy)",
+    "CREDITS_SCORING": "Score de créditos/confianza del seller"
+  },
+  
+  "picture_quality": {
+    "N_ITEMS_PQT": "Número de items del seller bajo revisión por Picture Quality Team (problemas de calidad de imágenes/fotos)",
+    "RATE_ITEMS_UNDER_PQT": "Proporción de items bajo revisión PQT (picture quality) sobre el total de items del seller"
+  },
+  
+  "promotions_and_offers": {
+    "CUPONES_PROMOTIONS": "Número de cupones/promociones activas del seller",
+    "N_OFFERS_ACTIVE_ON_RECO_DATE": "Número total de ofertas activas en la fecha de recomendación",
+    "N_ITEMS_WITH_ACTIVE_OFFERS_ON_RECO_DATE": "Número de items únicos con ofertas activas en fecha de reco",
+    "N_ACTIVE_PROMOTIONS_ON_RECO_DATE": "Número de promociones activas en fecha de recomendación",
+    "N_ACTIVE_OFFERS_TIER1_ON_RECO_DATE": "Ofertas activas Tier 1 (descuento alto) en fecha de reco",
+    "N_ACTIVE_OFFERS_TIER2_ON_RECO_DATE": "Ofertas activas Tier 2 (descuento medio) en fecha de reco",
+    "N_ACTIVE_OFFERS_TIER3_ON_RECO_DATE": "Ofertas activas Tier 3 (descuento bajo) en fecha de reco",
+    "N_OFFERS_CREATED_POST_30D": "Ofertas creadas en los últimos 30 días",
+    "N_OFFERS_CREATED_POST_7D": "Ofertas creadas en los últimos 7 días",
+    "N_OFFERS_CREATED_POST_1D": "Ofertas creadas en el último día"
+  },
+  
+  "commercial_events": {
+    "HAS_EVENT_TODAY": "Flag booleano (True/False) indicando si hay un evento comercial activo hoy",
+    "ACTIVE_EVENTS_ON_RECO_DATE": "Nombre(s) de eventos comerciales activos en la fecha (ej: 'Hot Sale, Cyber Monday')",
+    "N_STRATEGIES_ON_RECO_DATE": "Número de estrategias comerciales activas en fecha de recomendación",
+    "TOP_STRATEGY_TYPE_ON_RECO_DATE": "Tipo de la estrategia comercial principal activa",
+    "DAYS_TO_NEXT_EVENT": "Días hasta el próximo evento comercial",
+    "DAYS_SINCE_LAST_EVENT": "Días desde el último evento comercial",
+    "OFFERS_EVENTS_STATUS": "Estado de las ofertas en eventos: EVENT_ONLY (solo evento), NO_EVENT (sin evento), BOTH (ambos)"
+  },
+  
+  "shop_configuration": {
+    "HAS_ESHOP": "Flag booleano (0/1) indicando si el seller tiene tienda oficial (eShop)",
+    "HAS_ACTIVE_MSHOPS": "Flag booleano (0/1) indicando si tiene MShops activo (tienda mobile)",
+    "SHOP_CONF_DESIGN_THEME": "Tema de diseño configurado en la tienda del seller",
+    "SHOP_CONF_DELEGATED_DOMAIN_DT": "Dominio delegado configurado para la tienda"
+  },
+  
+  "listing_types": {
+    "N_ITEMS_PREMIUM": "Número de items con listing type Premium",
+    "N_SHOPS_ITEMS_PREMIUM": "Número de items Premium en la tienda",
+    "N_SHOPS_ITEMS_CLASSIC": "Número de items con listing type Clásico en la tienda",
+    "N_SHOPS_ITEMS_FREE": "Número de items gratuitos (free listing) en la tienda",
+    "N_ITEMS_UNDER_REVIEW": "Número de items bajo revisión general",
+    "N_ITEMS_LISTING_TYPE_GOLD": "Número de items con listing type Gold",
+    "RATE_ITEMS_LISTING_TYPE_GOLD": "Proporción de items Gold sobre total",
+    "RATE_ITEMS_LISTING_TYPE_PREMIUM": "Proporción de items Premium sobre total",
+    "RATE_ITEMS_UNDER_REVIEW": "Proporción de items bajo revisión sobre total"
+  },
+  
+  "gmv_and_sales": {
+    "GMV_USD": "Gross Merchandise Value total del seller en USD (valor bruto de mercancías vendidas)",
+    "DAILY_GMV_USD": "GMV diario promedio del seller en USD",
+    "PROJECTED_CAPACITY_DATE_23_EM": "Capacidad proyectada para fecha específica (23 de algún mes) para envíos ME"
+  },
+  
+  "feedback_and_violations": {
+    "SUM_NEGATIVE_FEEDBACK": "Suma total de feedbacks negativos recibidos",
+    "NEGATIVE_FEEDBACK_60D": "Cantidad de feedbacks negativos en últimos 60 días",
+    "PREFULFILLMENT_CANCEL_RATE_60D": "Tasa de cancelaciones pre-fulfillment (antes de enviar) en 60 días",
+    "TOTAL_MOD_CUSTOMER_FEEDBACK_Y": "Total de moderaciones por feedback de clientes en el último año",
+    "TOTAL_MOD_PROPERTY_VIOLATIONS_Y": "Total de moderaciones por violaciones de propiedad intelectual en el último año",
+    "NOISE_BY_CUSTOMER_FEEDBACK_Y": "Ruido/falsos positivos en feedbacks de clientes (último año)",
+    "INTELLECTUAL_PROPERTY_VIOLATION_Y": "Violaciones de propiedad intelectual confirmadas (último año)"
+  },
+  
+  "customer_service": {
+    "AVG_RESPONSE_TIME": "Tiempo promedio de respuesta a preguntas de clientes (en horas o minutos)",
+    "REPEAT_PURCHASE_RATIO": "Proporción de clientes que repiten compra con este seller",
+    "SUCCESSFUL_ITEMS": "Número de items que generan ventas exitosas recurrentemente"
+  },
+  
+  "visits_and_conversion": {
+    "VISITS_30D": "Visitas totales a publicaciones del seller en últimos 30 días",
+    "VISITS_Y": "Visitas totales en el último año",
+    "CVR_30D": "Conversion Rate (tasa de conversión) en últimos 30 días (órdenes/visitas)",
+    "CVR_30D_L15D": "CVR en los últimos 15 días",
+    "CVR_30D_A15D": "CVR antes de los últimos 15 días",
+    "CVR_0_15D": "CVR calculado en ventana post-acción (0-15 días)",
+    "CVR_TdA_15D": "CVR calculado en ventana de control 'Tiempo de Antes' (15 días previos)",
+    "DELTA_CVR_15D": "Diferencia (delta) entre CVR post-acción y CVR pre-acción (CVR_0_15D - CVR_TdA_15D)",
+    "CVR_GROUPED": "CVR agrupado/categorizado (ej: bajo, medio, alto)",
+    "CVR_GROUPED_FINAL": "CVR agrupado final después de procesamiento",
+    "EXPOSICION_VIDRIERA_Y": "Exposición en vidriera/showcase anual (visibilidad destacada)"
+  },
+  
+  "control_and_quality_flags": {
+    "CRUZAR": "Flag de control para cruzar/validar datos (1=validar, 0=no validar)",
+    "INCONSISTENCIA_TdA_15D": "Flag de inconsistencia detectada en ventana Tiempo de Antes (15 días)",
+    "INCONSISTENCIA_TdA_7D": "Flag de inconsistencia en ventana TdA de 7 días",
+    "INCONSISTENCIA_0_7D": "Flag de inconsistencia en ventana post-acción (0-7 días)",
+    "INCONSISTENCIA_0_15D": "Flag de inconsistencia en ventana post-acción (0-15 días)",
+    "NO_EXCLUDE": "Flag indicando que el registro NO debe excluirse del análisis (1=incluir, 0=excluir)"
+  },
+  
+  "reward_calculation": {
+    " ": "Reward original calculado para el entrenamiento del modelo (basado en uplift de GMV o CVR)",
+    "REWARD_STANDARDIZED": "Reward estandarizado por sitio (normalizado usando media y desviación estándar del site)"
+  },
+  
+  "frequency_encoding": {
+    "SIT_SITE_ID_freq": "Frecuencia/encoding numérico del site_id para el modelo",
+    "CLUSTER_SELLER_freq": "Frecuencia/encoding del cluster del seller",
+    "SELLER_SEGMENT_DETAIL_freq": "Frecuencia/encoding del segmento detallado",
+    "REP_REAL_LEVEL_freq": "Frecuencia/encoding del nivel de reputación real",
+    "REP_CURRENT_LEVEL_freq": "Frecuencia/encoding del nivel de reputación actual",
+    "SELLER_REPUTATION_freq": "Frecuencia/encoding de la reputación del seller",
+    "TOP_1_DOMAIN_ID_freq": "Frecuencia/encoding del dominio top 1 del seller",
+    "TOP_2_DOMAIN_ID_freq": "Frecuencia/encoding del dominio top 2 del seller"
+  },
+  
+  "reward_reshaping_knn": {
+    "CARD_FINAL": "Card final seleccionada después de todo el procesamiento",
+    "n_neighbors": "Número de vecinos (k) usados en el algoritmo k-NN para reward reshaping (típicamente 25 o 5)",
+    "strategy": "Estrategia de k-NN usada (ej: 'k-NN (k=25)')",
+    "pct_same_seller": "Porcentaje de vecinos k-NN que pertenecen al mismo seller (para detectar overfitting)",
+    "REWARD_RESHAPED": "Reward después de aplicar el algoritmo k-NN (ROLeR - Reward Reshaping with k-NN)",
+    "REWARD_UNCERTAINTY": "Incertidumbre/varianza del reward estimado por k-NN (dispersión de rewards de vecinos)",
+    "REWARD_NEIGHBOR_IDS": "Lista de IDs de los k vecinos más cercanos usados para calcular el reward reshaped",
+    "REWARD_NEIGHBOR_REWARDS": "Lista de rewards de los k vecinos más cercanos",
+    "REWARD_FINAL": "Reward final usado para entrenar el modelo (puede ser REWARD_RESHAPED o alguna combinación)"
+  },
+  
+  "health_index": {
+    "seller_index_0": "Health Index del seller en el momento T0 (antes de la acción)",
+    "seller_index_15": "Health Index del seller en T+15 días (después de la acción)",
+    "Health_Seller_Index": "Índice de salud general del seller (combinación de métricas de reputación, GMV, CVR)",
+    "Health_Seller_Index_Standardized": "Health Index estandarizado (normalizado por distribución)",
+    "mean_site": "Media del Health Index para el site específico",
+    "sd_site": "Desviación estándar del Health Index para el site",
+    "mean_sc_index": "Media del Seller Coach Index",
+    "sd_sc_index": "Desviación estándar del Seller Coach Index"
+  },
+  
+  "confidence_intervals": {
+    "0.025": "Percentil 2.5% del reward (límite inferior del intervalo de confianza al 95%)",
+    "0.975": "Percentil 97.5% del reward (límite superior del intervalo de confianza al 95%)"
+  },
+  
+  "glossary": {
+    "TdA": "Tiempo de Antes - Ventana de control pre-acción",
+    "L15D": "Last 15 Days - Últimos 15 días",
+    "A15D": "Anterior 15 Days - Período anterior a los últimos 15 días",
+    "ME": "Mercado Envíos",
+    "ME2": "Mercado Envíos 2 (fulfillment)",
+    "LL": "Live Listings (publicaciones activas)",
+    "PQT": "Picture Quality Team (equipo de calidad de imágenes)",
+    "CVR": "Conversion Rate (tasa de conversión)",
+    "GMV": "Gross Merchandise Value",
+    "ODR": "Order Defect Rate",
+    "k-NN": "k-Nearest Neighbors (algoritmo de vecinos más cercanos)",
+    "ROLeR": "Reward Reshaping using k-NN technique"
+  }
+}
+
