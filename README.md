@@ -22,6 +22,7 @@ Pipeline reproducible:
 src/
   data/
     data_transform2torch.py
+    generate_temporal_splits.py
     save_preprocessing_artifacts.py
   models/
     behavior_cloning_train.py
@@ -64,10 +65,10 @@ Genera `data/processed/preprocessing_artifacts.json` con:
 - parámetros de `StandardScaler`
 - columnas finales del estado
 
-### 3) Entrenar baseline BC + guardar splits
+### 3) Generar split temporal persistido + tensores train/val/test
 
 ```bash
-python src/models/behavior_cloning_train.py
+python src/data/generate_temporal_splits.py
 ```
 
 Este script:
@@ -77,10 +78,18 @@ Este script:
   - `data/processed/tensor_dataset_train.pt`
   - `data/processed/tensor_dataset_val.pt`
   - `data/processed/tensor_dataset_test.pt`
-- entrena BC y guarda `models/modelo_baseline_bc.pth`
-- reporta métricas en test para BC y Popularity
 
-### 4) Entrenar Trajectory Transformer
+### 4) Entrenar baseline BC
+
+```bash
+python src/models/behavior_cloning_train.py
+```
+
+- Usa los splits persistidos ya generados
+- Entrena BC y guarda `models/modelo_baseline_bc.pth`
+- Reporta métricas en test para BC y Popularity
+
+### 5) Entrenar Trajectory Transformer
 
 ```bash
 python src/models/trajectory_transformer_train.py
@@ -91,7 +100,7 @@ python src/models/trajectory_transformer_train.py
 - Guarda `models/modelo_trajectory_transformer.pth`
 - Reporta métricas test para TT y Popularity
 
-### 5) Entrenar Decision Transformer
+### 6) Entrenar Decision Transformer
 
 ```bash
 python src/models/decision_transformer_train.py

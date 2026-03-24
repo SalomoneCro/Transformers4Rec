@@ -1,12 +1,8 @@
-import ast
-import json
 import os
 import random
-from dataclasses import dataclass
 from typing import Dict, Iterable, List, Sequence, Tuple
 
 import numpy as np
-import pandas as pd
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -21,18 +17,8 @@ CONFIG = {
     "batch_size": 128,
     "hidden_dim": 128,
     "lr": 1e-3,
-    "train_ratio": 0.7,
-    "val_ratio": 0.15,
     "topk": [5, 10],
-    "save_split_artifacts": True,
 }
-
-
-@dataclass
-class SplitIndices:
-    train: np.ndarray
-    val: np.ndarray
-    test: np.ndarray
 
 
 class BehaviorCloningBaseline(nn.Module):
@@ -59,117 +45,35 @@ def set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def _resolve_project_paths() -> Tuple[str, str, str]:
+def _resolve_project_paths() -> Tuple[str, str, str, str]:
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(script_dir, "..", ".."))
-    tensor_path = os.path.join(project_root, "data", "processed", "tensor_dataset.pt")
-    trajectory_path = os.path.join(project_root, "data", "processed", "trajectorys_df.csv")
-    model_path = os.path.join(project_root, "models", "modelo_baseline_bc.pth")
     processed_dir = os.path.join(project_root, "data", "processed")
-    return tensor_path, trajectory_path, model_path, processed_dir
+    train_path = os.path.join(processed_dir, "tensor_dataset_train.pt")
+    val_path = os.path.join(processed_dir, "tensor_dataset_val.pt")
+    test_path = os.path.join(processed_dir, "tensor_dataset_test.pt")
+    model_path = os.path.join(project_root, "models", "modelo_baseline_bc.pth")
+    return train_path, val_path, test_path, model_path
 
 
-def save_split_artifacts(
-    processed_dir: str,
-    split: SplitIndices,
-    tensor_data: Dict[str, torch.Tensor],
-    train_ratio: float,
-    val_ratio: float,
-) -> None:
-    os.makedirs(processed_dir, exist_ok=True)
-
-    split_json_path = os.path.join(processed_dir, "splits_temporal.json")
-    split_payload = {
-        "strategy": "temporal_last_timestamp",
-        "train_ratio": train_ratio,
-        "val_ratio": val_ratio,
-        "test_ratio": 1.0 - train_ratio - val_ratio,
-        "num_samples": int(len(split.train) + len(split.val) + len(split.test)),
-        "train_size": int(len(split.train)),
-        "val_size": int(len(split.val)),
-        "test_size": int(len(split.test)),
-        "indices": {
-            "train": split.train.tolist(),
-            "val": split.val.tolist(),
-            "test": split.test.tolist(),
-        },
-    }
-    with open(split_json_path, "w", encoding="utf-8") as f:
-        json.dump(split_payload, f, ensure_ascii=True, indent=2)
-
-    states = tensor_data["states"].float()
-    actions = tensor_data["actions"].long()
-    masks = tensor_data["attention_mask"].float()
-    rtgs = tensor_data["rtgs"].float() if "rtgs" in tensor_data else None
-    state_dim = int(tensor_data["state_dim"])
-    act_dim = int(tensor_data["act_dim"])
-
-    split_to_idx = {
-        "train": torch.tensor(split.train, dtype=torch.long),
-        "val": torch.tensor(split.val, dtype=torch.long),
-        "test": torch.tensor(split.test, dtype=torch.long),
-    }
-
-    for split_name, idx in split_to_idx.items():
-        payload = {
-            "states": states[idx],
-            "actions": actions[idx],
-            "attention_mask": masks[idx],
-            "state_dim": state_dim,
-            "act_dim": act_dim,
-        }
-        if rtgs is not None:
-            payload["rtgs"] = rtgs[idx]
-        out_path = os.path.join(processed_dir, f"tensor_dataset_{split_name}.pt")
-        torch.save(payload, out_path)
-
-    print(f"🗂️ Split guardado en: {split_json_path}")
-    print(
-        "🗂️ Tensores por split guardados en: "
-        f"{os.path.join(processed_dir, 'tensor_dataset_train.pt')}, "
-        f"{os.path.join(processed_dir, 'tensor_dataset_val.pt')}, "
-        f"{os.path.join(processed_dir, 'tensor_dataset_test.pt')}"
-    )
-
-
-def _parse_last_timestamp(value: str) -> pd.Timestamp:
-    timestamps = ast.literal_eval(value) if isinstance(value, str) else value
-    if not timestamps:
-        return pd.NaT
-    return pd.to_datetime(timestamps[-1], utc=True, errors="coerce")
-
-
-def temporal_split_indices(
-    trajectory_path: str,
-    train_ratio: float = 0.7,
-    val_ratio: float = 0.15,
-) -> SplitIndices:
-    df = pd.read_csv(trajectory_path)
-    df["_row_id"] = np.arange(len(df))
-    df["_last_ts"] = df["timestamps"].apply(_parse_last_timestamp)
-    df = df.sort_values("_last_ts", kind="mergesort").reset_index(drop=True)
-
-    n = len(df)
-    train_end = int(n * train_ratio)
-    val_end = int(n * (train_ratio + val_ratio))
-
-    all_indices = df["_row_id"].to_numpy()
-    train_idx = all_indices[:train_end]
-    val_idx = all_indices[train_end:val_end]
-    test_idx = all_indices[val_end:]
-    return SplitIndices(train=train_idx, val=val_idx, test=test_idx)
+def _load_split_tensor(path: str) -> Dict[str, torch.Tensor]:
+    if not os.path.exists(path):
+        raise FileNotFoundError(
+            f"No existe el split tensorizado: {path}. "
+            "Primero ejecuta src/data/generate_temporal_splits.py para preparar train/val/test."
+        )
+    return torch.load(path)
 
 
 def _build_loader(
-    states: torch.Tensor,
-    actions: torch.Tensor,
-    masks: torch.Tensor,
-    indices: np.ndarray,
+    split_data: Dict[str, torch.Tensor],
     batch_size: int,
     shuffle: bool,
 ) -> DataLoader:
-    idx_tensor = torch.tensor(indices, dtype=torch.long)
-    dataset = TensorDataset(states[idx_tensor], actions[idx_tensor], masks[idx_tensor])
+    states = split_data["states"].float()
+    actions = split_data["actions"].long()
+    masks = split_data["attention_mask"].float()
+    dataset = TensorDataset(states, actions, masks)
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
 
 
@@ -341,42 +245,27 @@ def main() -> None:
     set_seed(int(CONFIG["seed"]))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    tensor_path, trajectory_path, model_path, processed_dir = _resolve_project_paths()
-    print(f"📂 Cargando tensores desde: {tensor_path}")
-    tensor_data = torch.load(tensor_path)
+    train_path, val_path, test_path, model_path = _resolve_project_paths()
+    print(f"📂 Cargando splits persistidos:\n- {train_path}\n- {val_path}\n- {test_path}")
 
-    states = tensor_data["states"].float()
-    actions = tensor_data["actions"].long()
-    masks = tensor_data["attention_mask"].float()
-    input_dim = int(tensor_data["state_dim"])
-    output_dim = int(tensor_data["act_dim"])
+    train_data = _load_split_tensor(train_path)
+    val_data = _load_split_tensor(val_path)
+    test_data = _load_split_tensor(test_path)
 
-    split = temporal_split_indices(
-        trajectory_path=trajectory_path,
-        train_ratio=float(CONFIG["train_ratio"]),
-        val_ratio=float(CONFIG["val_ratio"]),
-    )
-    if bool(CONFIG["save_split_artifacts"]):
-        save_split_artifacts(
-            processed_dir=processed_dir,
-            split=split,
-            tensor_data=tensor_data,
-            train_ratio=float(CONFIG["train_ratio"]),
-            val_ratio=float(CONFIG["val_ratio"]),
-        )
-
+    input_dim = int(train_data["state_dim"])
+    output_dim = int(train_data["act_dim"])
+    seq_len = int(train_data["states"].shape[1])
     print(
-        "Split temporal -> "
-        f"train={len(split.train)} | val={len(split.val)} | test={len(split.test)}"
+        "Dimensiones -> "
+        f"state_dim={input_dim}, act_dim={output_dim}, context_len={seq_len}"
     )
-    print(f"Dimensiones -> state_dim={input_dim}, act_dim={output_dim}")
 
     batch_size = int(CONFIG["batch_size"])
     topk = [int(k) for k in CONFIG["topk"]]
 
-    train_loader = _build_loader(states, actions, masks, split.train, batch_size, shuffle=True)
-    val_loader = _build_loader(states, actions, masks, split.val, batch_size, shuffle=False)
-    test_loader = _build_loader(states, actions, masks, split.test, batch_size, shuffle=False)
+    train_loader = _build_loader(train_data, batch_size=batch_size, shuffle=True)
+    val_loader = _build_loader(val_data, batch_size=batch_size, shuffle=False)
+    test_loader = _build_loader(test_data, batch_size=batch_size, shuffle=False)
 
     model_bc = BehaviorCloningBaseline(input_dim, int(CONFIG["hidden_dim"]), output_dim).to(device)
     optimizer = optim.Adam(model_bc.parameters(), lr=float(CONFIG["lr"]))
