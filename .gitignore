@@ -29,3 +29,5 @@ data/processed/tensor_dataset_test.pt
 data/processed/splits_temporal.json
 data/processed/preprocessing_artifacts.json
 data/processed/grid_search/
+
+*.pt
