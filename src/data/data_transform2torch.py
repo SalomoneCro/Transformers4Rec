@@ -35,7 +35,7 @@ class RLSequenceDataset(Dataset):
         
         seq_len = len(states)
         
-        # 2. Inicializar tensores vacíos (con padding a la IZQUIERDA)
+        # 2. Inicializar tensores vacíos (con padding a la DERECHA)
         # Llenamos de ceros inicialmente
         s_tensor = torch.zeros((self.context_length, self.state_dim), dtype=torch.float32)
         a_tensor = torch.zeros((self.context_length, 1), dtype=torch.long)
@@ -54,12 +54,12 @@ class RLSequenceDataset(Dataset):
             rtg_real = rtg
             real_len = seq_len
             
-        # 4. Insertar los datos reales al FINAL del tensor (Padding Izquierdo)
-        # Esto ayuda al Transformer a que la acción más reciente esté siempre en la última posición
-        s_tensor[-real_len:] = torch.tensor(s_real, dtype=torch.float32)
-        a_tensor[-real_len:] = torch.tensor(a_real, dtype=torch.long).unsqueeze(1)
-        rtg_tensor[-real_len:] = torch.tensor(rtg_real, dtype=torch.float32).unsqueeze(1)
-        mask_tensor[-real_len:] = 1.0  # 1 indica "dato real", 0 indica "padding"
+        # 4. Insertar los datos reales al INICIO del tensor (Padding Derecho)
+        # Esto preserva el orden temporal y deja el padding al final del contexto.
+        s_tensor[:real_len] = torch.tensor(s_real, dtype=torch.float32)
+        a_tensor[:real_len] = torch.tensor(a_real, dtype=torch.long).unsqueeze(1)
+        rtg_tensor[:real_len] = torch.tensor(rtg_real, dtype=torch.float32).unsqueeze(1)
+        mask_tensor[:real_len] = 1.0  # 1 indica "dato real", 0 indica "padding"
         
         return {
             'states': s_tensor,

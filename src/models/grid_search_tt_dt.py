@@ -134,6 +134,8 @@ class TrajectoryTransformer(nn.Module):
     def forward(self, states: torch.Tensor, actions: torch.Tensor, padding_mask: torch.Tensor) -> torch.Tensor:
         batch_size, seq_len, _ = states.shape
         device = states.device
+        valid_mask = padding_mask
+        key_padding_mask = ~valid_mask.squeeze(-1).bool()
         prev_actions = torch.full(
             (batch_size, seq_len), fill_value=self.start_action_id, dtype=torch.long, device=device
         )
@@ -141,8 +143,15 @@ class TrajectoryTransformer(nn.Module):
         pos_ids = torch.arange(seq_len, device=device).unsqueeze(0).expand(batch_size, seq_len)
         x = self.state_proj(states) + self.action_embed(prev_actions) + self.pos_embed(pos_ids)
         x = self.input_ln(x)
-        x = x * padding_mask
-        h = self.encoder(x, mask=self._causal_mask(seq_len, device))
+        x = x * valid_mask
+        # Con padding a la derecha, las posiciones padded quedan fuera del tramo visible
+        # para los tokens reales cuando se combina la causal mask con la key padding mask.
+        h = self.encoder(
+            x,
+            mask=self._causal_mask(seq_len, device),
+            src_key_padding_mask=key_padding_mask,
+        )
+        h = h * valid_mask
         return self.out(h)
 
 
@@ -191,6 +200,8 @@ class DecisionTransformer(nn.Module):
     ) -> torch.Tensor:
         batch_size, seq_len, _ = states.shape
         device = states.device
+        valid_mask = padding_mask
+        key_padding_mask = ~valid_mask.squeeze(-1).bool()
         prev_actions = torch.full(
             (batch_size, seq_len), fill_value=self.start_action_id, dtype=torch.long, device=device
         )
@@ -203,8 +214,15 @@ class DecisionTransformer(nn.Module):
             + self.pos_embed(pos_ids)
         )
         x = self.input_ln(x)
-        x = x * padding_mask
-        h = self.encoder(x, mask=self._causal_mask(seq_len, device))
+        x = x * valid_mask
+        # Con padding a la derecha, las posiciones padded quedan fuera del tramo visible
+        # para los tokens reales cuando se combina la causal mask con la key padding mask.
+        h = self.encoder(
+            x,
+            mask=self._causal_mask(seq_len, device),
+            src_key_padding_mask=key_padding_mask,
+        )
+        h = h * valid_mask
         return self.out(h)
 
 

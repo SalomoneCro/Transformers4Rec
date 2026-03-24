@@ -120,6 +120,9 @@ class DecisionTransformer(nn.Module):
         batch_size, seq_len, _ = states.shape
         device = states.device
 
+        valid_mask = padding_mask
+        key_padding_mask = ~valid_mask.squeeze(-1).bool()
+
         prev_actions = torch.full(
             (batch_size, seq_len),
             fill_value=self.start_action_id,
@@ -136,10 +139,17 @@ class DecisionTransformer(nn.Module):
             + self.pos_embed(pos_ids)
         )
         x = self.input_ln(x)
-        x = x * padding_mask
+        x = x * valid_mask
 
         causal_mask = self._causal_mask(seq_len, device=device)
-        h = self.encoder(x, mask=causal_mask)
+        # Con padding a la derecha, las posiciones padded quedan en el futuro del tramo real.
+        # Eso permite combinar causal mask + key padding mask sin dejar queries válidos sin contexto.
+        h = self.encoder(
+            x,
+            mask=causal_mask,
+            src_key_padding_mask=key_padding_mask,
+        )
+        h = h * valid_mask
         logits = self.out(h)
         return logits
 

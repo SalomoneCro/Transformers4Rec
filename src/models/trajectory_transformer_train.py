@@ -107,6 +107,9 @@ class TrajectoryTransformer(nn.Module):
         batch_size, seq_len, _ = states.shape
         device = states.device
 
+        valid_mask = padding_mask
+        key_padding_mask = ~valid_mask.squeeze(-1).bool()
+
         # teacher forcing shifted right: a_{t-1} -> predice a_t
         prev_actions = torch.full(
             (batch_size, seq_len),
@@ -120,12 +123,17 @@ class TrajectoryTransformer(nn.Module):
         x = self.state_proj(states) + self.action_embed(prev_actions) + self.pos_embed(pos_ids)
         x = self.input_ln(x)
         # Aplicamos padding directamente sobre embeddings para evitar ruido de posiciones no reales.
-        x = x * padding_mask
+        x = x * valid_mask
 
         causal_mask = self._causal_mask(seq_len, device=device)
-        # Importante: no usar src_key_padding_mask aquí para evitar filas completamente enmascaradas
-        # que pueden llevar a NaN en algunas versiones/backends.
-        h = self.encoder(x, mask=causal_mask)
+        # Con padding a la derecha, las posiciones padded quedan en el futuro del tramo real.
+        # Eso permite combinar causal mask + key padding mask sin dejar queries válidos sin contexto.
+        h = self.encoder(
+            x,
+            mask=causal_mask,
+            src_key_padding_mask=key_padding_mask,
+        )
+        h = h * valid_mask
         logits = self.out(h)
         return logits
 
